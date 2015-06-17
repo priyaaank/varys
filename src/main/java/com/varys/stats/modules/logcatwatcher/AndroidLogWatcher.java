@@ -14,7 +14,7 @@ public class AndroidLogWatcher {
     executor = new CommandExecutor(logCommand);
   }
 
-  public void run() {
+  public void watch() {
     try {
 
       executor.execute();
@@ -25,7 +25,7 @@ public class AndroidLogWatcher {
   }
 
   public static void main(String[] args) {
-    new AndroidLogWatcher().run();
+    new AndroidLogWatcher().watch();
   }
 
 }

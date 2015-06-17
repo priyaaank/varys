@@ -1,3 +1,5 @@
 .idea
 varys.iml
 out/
+build/
+.gradle/
