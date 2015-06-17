@@ -24,7 +24,7 @@ public class ShellCommand {
     return concatenatedArguments.toString();
   }
 
-  static class CommandArgument {
+  public static class CommandArgument {
 
     private String key;
     private String separator;
