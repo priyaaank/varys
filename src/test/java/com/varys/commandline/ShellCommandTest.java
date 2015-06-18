@@ -33,4 +33,44 @@ public class ShellCommandTest {
     //then
     assertEquals("ls", listCommand.toString());
   }
+
+  @Test
+  public void shouldAppendArgumentsLater() {
+    //given
+    ShellCommand.CommandArgument arguments = new ShellCommand.CommandArgument("logcat");
+    ShellCommand listCommand = new ShellCommand("adb", arguments);
+
+    //when
+    ShellCommand.CommandArgument additionalArgument = new ShellCommand.CommandArgument("ActivityManager",":","I");
+    listCommand.addArguments(additionalArgument);
+
+    //then
+    assertEquals("adb logcat ActivityManager:I", listCommand.toString());
+  }
+
+  @Test
+  public void shouldReturnSameCommandWhenAdditionalArgumentsAreEmpty() throws Exception {
+  //given
+    ShellCommand.CommandArgument arguments = new ShellCommand.CommandArgument("logcat");
+    ShellCommand listCommand = new ShellCommand("adb", arguments);
+
+    //when
+    listCommand.addArguments(new ShellCommand.CommandArgument[0]);
+
+    //then
+    assertEquals("adb logcat", listCommand.toString());
+  }
+
+  @Test
+  public void shouldReturnSameCommandWhenAdditionalArgumentsAreNull() throws Exception {
+    //given
+    ShellCommand.CommandArgument arguments = new ShellCommand.CommandArgument("logcat");
+    ShellCommand listCommand = new ShellCommand("adb", arguments);
+
+    //when
+    listCommand.addArguments();
+
+    //then
+    assertEquals("adb logcat", listCommand.toString());
+  }
 }

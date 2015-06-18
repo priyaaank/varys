@@ -1,5 +1,9 @@
 package com.varys.commandline;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ShellCommand {
 
   public static final String SINGLE_SPACE = " ";
@@ -11,17 +15,31 @@ public class ShellCommand {
     this.arguments = arguments;
   }
 
+  public void addArguments(CommandArgument...additionalArguments) {
+    if(additionalArguments == null || additionalArguments.length ==0) return;
+    if(arguments == null) arguments = new CommandArgument[0];
+    arguments = contactArrays(arguments, additionalArguments);
+  }
+
   @Override
   public String toString() {
     if(arguments == null || arguments.length == 0) return commandName;
 
-    StringBuffer concatenatedArguments = new StringBuffer(commandName);
+    StringBuilder concatenatedArguments = new StringBuilder(commandName);
     for(CommandArgument argument : arguments) {
       concatenatedArguments.append(SINGLE_SPACE);
       concatenatedArguments.append(argument.toString());
     }
 
     return concatenatedArguments.toString();
+  }
+
+  private CommandArgument[] contactArrays(CommandArgument[]...arrays) {
+    List<CommandArgument> concatenatedArrays = new ArrayList<CommandArgument>();
+    for (CommandArgument[] array : arrays) {
+      concatenatedArrays.addAll(Arrays.asList(array));
+    }
+    return concatenatedArrays.toArray(new CommandArgument[concatenatedArrays.size()]);
   }
 
   public static class CommandArgument {
