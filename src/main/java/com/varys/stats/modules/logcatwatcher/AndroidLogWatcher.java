@@ -2,6 +2,7 @@ package com.varys.stats.modules.logcatwatcher;
 
 import com.varys.commandline.CommandExecutor;
 import com.varys.commandline.CommandOutputHandler;
+import com.varys.commandline.OutputListener;
 import com.varys.commandline.ShellCommand;
 
 import java.io.BufferedReader;
