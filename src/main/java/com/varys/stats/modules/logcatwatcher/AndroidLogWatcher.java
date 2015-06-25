@@ -4,6 +4,10 @@ import com.varys.commandline.CommandExecutor;
 import com.varys.commandline.CommandOutputHandler;
 import com.varys.commandline.OutputListener;
 import com.varys.commandline.ShellCommand;
+import com.varys.eventhub.EventHub;
+import com.varys.eventhub.EventPublisher;
+import com.varys.eventhub.EventType;
+import com.varys.eventhub.Message;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,25 +16,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AndroidLogWatcher {
+public class AndroidLogWatcher implements EventPublisher {
 
-  private List<LogListener> listeners;
-
-  public AndroidLogWatcher() {
-    listeners = new ArrayList<LogListener>();
-  }
-
-  protected List<LogListener> getListeners() {
-    return this.listeners;
-  }
-
-  public void registerListener(LogListener listener) {
-    if(!listeners.contains(listener)) listeners.add(listener);
-  }
-
-  public void removeListener(LogListener listener) {
-    if(listeners.contains(listener)) listeners.remove(listener);
-  }
+  private EventHub eventHub;
 
   public void watch() {
     CommandExecutor executor = new CommandExecutor(getLogCommand(), getLogHandler());
@@ -51,11 +39,26 @@ public class AndroidLogWatcher {
     return new LogBroadcaster();
   }
 
+  @Override
+  public void registerHubAsListener(EventHub hub) {
+    this.eventHub = hub;
+  }
+
+  @Override
+  public void deRegisterHubAsListener(EventHub eventHub) {
+    this.eventHub = null;
+  }
+
+  protected EventType getEventType() {
+    return EventType.ANDROID_LOG;
+  }
+
   private class LogBroadcaster implements CommandOutputHandler {
 
     @Override
     public void handleCommandOutput(Process commandProcess, InputStream commandInputStream) {
       BufferedReader reader = null;
+      EventHub.getInstance().registerPublisher(AndroidLogWatcher.this);
       try {
         reader = new BufferedReader(new InputStreamReader(commandInputStream));
         logAllCommandOutput(reader);
@@ -63,15 +66,15 @@ public class AndroidLogWatcher {
         ioException.printStackTrace();
       } finally {
         closeReader(reader);
+        EventHub.getInstance().deRegisterPublisher(AndroidLogWatcher.this);
       }
     }
 
     private BufferedReader logAllCommandOutput(BufferedReader reader) throws IOException {
       String line = null;
+      EventType eventType = getEventType();
       while ((line = reader.readLine()) != null) {
-        for (LogListener listener : getListeners()) {
-          listener.receivedLog(line);
-        }
+        eventHub.publishMessage(eventType, new Message<String>(eventType, line));
       }
       return reader;
     }
@@ -85,11 +88,5 @@ public class AndroidLogWatcher {
         }
       }
     }
-  }
-
-  public static interface LogListener {
-
-    void receivedLog(String logStatement);
-
   }
 }

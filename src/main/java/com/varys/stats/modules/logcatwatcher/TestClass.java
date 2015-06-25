@@ -1,17 +1,22 @@
 package com.varys.stats.modules.logcatwatcher;
 
-public class TestClass implements AndroidLogWatcher.LogListener {
+import com.varys.eventhub.EventHub;
+import com.varys.eventhub.EventListener;
+import com.varys.eventhub.EventType;
+import com.varys.eventhub.Message;
 
-  @Override
-  public void receivedLog(String logStatement) {
-    System.out.println(logStatement);
-  }
+public class TestClass implements EventListener {
 
   public static void main(String[] args) {
+    EventHub instance = EventHub.getInstance();
     TestClass listener = new TestClass();
     ActivityManagerLogWatcher activityManagerLogWatcher = new ActivityManagerLogWatcher();
-    activityManagerLogWatcher.registerListener(listener);
+    instance.registerFor(EventType.ANDROID_LOG, listener);
     activityManagerLogWatcher.watch();
   }
 
+  @Override
+  public <String> void received(Message<String> message) {
+    System.out.println(message.messageObject);
+  }
 }

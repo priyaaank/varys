@@ -5,15 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.varys.eventhub.EventType.ACTIVITY_MANAGER_LOG;
-import static com.varys.eventhub.EventType.ALL;
-import static com.varys.eventhub.EventType.ANDROID_LOG;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static com.varys.eventhub.EventType.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventHubTest {
@@ -55,7 +50,7 @@ public class EventHubTest {
     hub.registerFor(ACTIVITY_MANAGER_LOG, listener);
 
     //when
-    Message<FakeMessage> message = new Message<FakeMessage>();
+    Message<FakeMessage> message = new Message<FakeMessage>(ACTIVITY_MANAGER_LOG, new FakeMessage());
     hub.publishMessage(ACTIVITY_MANAGER_LOG, message);
 
     //then
@@ -71,7 +66,7 @@ public class EventHubTest {
     hub.registerFor(ACTIVITY_MANAGER_LOG, additionalListener);
 
     //when
-    Message<FakeMessage> message = new Message<FakeMessage>();
+    Message<FakeMessage> message = new Message<FakeMessage>(ACTIVITY_MANAGER_LOG, new FakeMessage());
     hub.publishMessage(ACTIVITY_MANAGER_LOG, message);
 
     //then
@@ -86,7 +81,7 @@ public class EventHubTest {
     hub.deRegisterFor(ACTIVITY_MANAGER_LOG, listener);
 
     //when
-    Message<FakeMessage> message = new Message<FakeMessage>();
+    Message<FakeMessage> message = new Message<FakeMessage>(ACTIVITY_MANAGER_LOG, new FakeMessage());
     hub.publishMessage(ACTIVITY_MANAGER_LOG, message);
 
     //then
@@ -99,7 +94,7 @@ public class EventHubTest {
     hub.registerFor(ALL, listener);
 
     //when
-    Message<FakeMessage> message = new Message<FakeMessage>();
+    Message<FakeMessage> message = new Message<FakeMessage>(ACTIVITY_MANAGER_LOG, new FakeMessage());
     hub.publishMessage(ALL, message);
 
     //then
@@ -124,7 +119,7 @@ public class EventHubTest {
     hub.registerFor(ACTIVITY_MANAGER_LOG, listener);
 
     //when
-    Message<FakeMessage> message = new Message<FakeMessage>();
+    Message<FakeMessage> message = new Message<FakeMessage>(ACTIVITY_MANAGER_LOG, new FakeMessage());
     hub.publishMessage(ANDROID_LOG, message);
 
     //then

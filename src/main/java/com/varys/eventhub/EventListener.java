@@ -2,6 +2,6 @@ package com.varys.eventhub;
 
 public interface EventListener {
 
-  <T> void received(T message);
+  <T> void received(Message<T> message);
 
 }

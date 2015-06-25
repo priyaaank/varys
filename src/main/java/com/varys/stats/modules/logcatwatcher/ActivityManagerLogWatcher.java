@@ -1,6 +1,7 @@
 package com.varys.stats.modules.logcatwatcher;
 
 import com.varys.commandline.ShellCommand;
+import com.varys.eventhub.EventType;
 
 public class ActivityManagerLogWatcher extends AndroidLogWatcher{
 
@@ -14,4 +15,8 @@ public class ActivityManagerLogWatcher extends AndroidLogWatcher{
     return logCatCommand;
   }
 
+  @Override
+  protected EventType getEventType() {
+    return EventType.ACTIVITY_MANAGER_LOG;
+  }
 }
