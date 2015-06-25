@@ -37,6 +37,7 @@ public class CommandOutputStreamReader implements CommandOutputHandler {
     String line = null;
     while ((line = reader.readLine()) != null) {
       commandOutput.append(line);
+      commandOutput.append("\n");
     }
     listener.commandOutputReceived(commandOutput.toString());
     return reader;

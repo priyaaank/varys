@@ -27,14 +27,20 @@ public class DeviceFinder implements OutputListener {
   @Override
   public void commandOutputReceived(String output) {
     new DeviceListingParser().parse(output);
+    for (Emulator emulator : runningEmulators()) {
+      System.out.println(emulator.toString());
+    };
   }
 
   public void probe() {
     try {
 
-      commandExecutor.execute();
+      Process process = commandExecutor.execute();
+      process.waitFor();
 
     } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
       e.printStackTrace();
     }
   }
@@ -86,5 +92,11 @@ public class DeviceFinder implements OutputListener {
       return DeviceType.UNKNOWN;
     }
 
+  }
+
+  public static void main(String[] args) {
+    CommandOutputStreamReader commandOutputReader = new CommandOutputStreamReader();
+    DeviceFinder deviceFinder = new DeviceFinder(commandOutputReader);
+    deviceFinder.probe();
   }
 }

@@ -19,7 +19,7 @@ public class CommandExecutor {
     this.outputHandler = outputHandler;
   }
 
-  public void execute() throws IOException {
+  public Process execute() throws IOException {
     System.out.println("Executing command: [ " + this.command.toString() +" ]");
     final Process newProcess = Runtime.getRuntime().exec(this.command.toString());
 
@@ -31,6 +31,7 @@ public class CommandExecutor {
     });
 
     commandThread.start();
+    return newProcess;
   }
 
   private class DefaultCommandOutputHandler implements CommandOutputHandler {

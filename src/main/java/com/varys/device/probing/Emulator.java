@@ -12,4 +12,8 @@ public class Emulator {
     this.runningOnPort = runningOnPort;
   }
 
+  @Override
+  public String toString() {
+    return serialNumber;
+  }
 }
