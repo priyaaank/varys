@@ -15,18 +15,18 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DeviceFinderTest {
+public class DeviceManagerTest {
 
-  private DeviceFinder deviceFinder;
+  private DeviceManager deviceManager;
 
   @Mock
   private CommandOutputStreamReader commandOutputStreamReader;
 
   @Before
   public void setUp() throws Exception {
-    doNothing().when(commandOutputStreamReader).registerAsListener(any(DeviceFinder.class));
+    doNothing().when(commandOutputStreamReader).registerAsListener(any(DeviceManager.class));
     doNothing().when(commandOutputStreamReader).handleCommandOutput(any(Process.class), any(InputStream.class));
-    deviceFinder = new DeviceFinder(commandOutputStreamReader);
+    deviceManager = new DeviceManager(commandOutputStreamReader);
   }
 
   @Test
@@ -36,13 +36,13 @@ public class DeviceFinderTest {
     commandLineOutput.append("List of devices attached\n")
         .append("emulator-5554          device product:sdk_phone_x86 model:Android_SDK_built_for_x86 device:generic_x86\n")
         .append("emulator-5558          device product:sdk_phone_x86 model:Android_SDK_built_for_x86 device:generic_x86\n");
-    deviceFinder.commandOutputReceived(commandLineOutput.toString());
+    deviceManager.commandOutputReceived(commandLineOutput.toString());
 
     //when
-    List<Emulator> runningEmulators = deviceFinder.runningEmulators();
+    List<Device> runningDevices = deviceManager.attachedDevices();
 
     //then
-    assertEquals(2, runningEmulators.size());
+    assertEquals(2, runningDevices.size());
   }
 
 }
